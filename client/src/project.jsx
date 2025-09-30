@@ -7,7 +7,7 @@ export default function Project() {
   const projects = [
     {
       title: 'College Evaluation Form', image: project1Image,
-      description: 'An assignment that involved developing a short evaluation form. Complete with  textboxes, buttons, dropdowns, lists, and a comment section.',
+      description: 'An short assignment that involves developing an instructor evaluation form. Complete with textboxes, buttons, dropdowns, lists, and a comment section.',
     },
     {
       title: 'Pacific Trails Resort', image: project2Image,

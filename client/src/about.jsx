@@ -11,7 +11,7 @@ export default function About() {
       
       {/* Short Paragraph */}
       <p>
-        Hello! My name is Daniel Simon Pagulong. I am currently in my third semester of the Software Engineering Technology program at Centennial College. I enjoy problem-solving and continuously learning new technologies to improve my skills. In this portfolio, you can explore my projects, education, and contact information.
+        Hello! My name is Daniel Simon Pagulong. I am currently attending my third semester of the Software Engineering Technology program at Centennial College. I enjoy problem-solving and  learning new technologies to improve my skills and expand my knowledge. In this portfolio, you can explore my past projects, level of education, and contact information.
       </p>
 
       {/* Resume Link */}

@@ -4,7 +4,7 @@ import database from './assets/database.jpg';
 import program from './assets/prog.jpg';
 export default function Services() {
     const services = [
-    { title: 'Web Application Design', description: 'Build Responsive websites', image: webApp },
+    { title: 'Web Design', description: 'Build responsive websites', image: webApp },
     { title: 'Database Management', description: 'Store, organize & retrieve data', image: database },
     { title: 'General Programming', description: 'Create scripts & automation', image: program },
   ];
