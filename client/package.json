@@ -4,13 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
     "dev": "vite",
+=======
+    "dev": "concurrently \"vite\" \"nodemon ../server.js\"",
+>>>>>>> 997fb5b (front and back ends connected, connect.string and json file updated)
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "link-react": "^3.0.0",
+<<<<<<< HEAD
+=======
+    "nodemon": "^3.1.10",
+>>>>>>> 997fb5b (front and back ends connected, connect.string and json file updated)
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.62.0",
