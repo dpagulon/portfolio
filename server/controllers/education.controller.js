@@ -1,50 +1,72 @@
 import Education from "../models/education.model.js";
+import extend from "lodash/extend.js";
 import errorHandler from "./error.controller.js";
 
- const createEducation = async (req, res) => {
+const createEducation = async (req, res) => {
+  const education = new Education(req.body);
   try {
-    const education = new Education(req.body);
     await education.save();
-    res.status(201).json(education);
+    return res.status(200).json({
+      message: "Successful!",
+    });
   } catch (err) {
-    res.status(400).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
-
- const getEducations = async (req, res) => {
+const getEducations = async (req, res) => {
   try {
-    const educations = await Education.find();
-    res.json(educations);
-  } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
-  }
-};
-
- const getEducationById = async (req, res) => {
-  try {
-    const education = await Education.findById(req.params.id);
-    if (!education) return res.status(404).json({ error: "Education not found" });
+    let education = await Education.find().select("title firstname lastname email completion description");
     res.json(education);
   } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
-
- const updateEducation = async (req, res) => {
+const getEducationById = async (req, res, next, id) => {
   try {
-    const education = await Education.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    let education = await Education.findById(id);
+    if (!education)
+      return res.status(400).json({
+        error: "Education not found",
+      });
+    req.profile = education;
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: "Could not retrieve education",
+    });
+  }
+};
+const updateEducation = async (req, res) => {
+  try {
+    let education = req.profile;
+    education = extend(education, req.body);
+    education.updated = Date.now();
+    await education.save();
+    education.hashed_password = undefined;
+    education.salt = undefined;
     res.json(education);
   } catch (err) {
-    res.status(400).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
+  }
+};
+const deleteEducation = async (req, res) => {
+  try {
+    let education = req.profile;
+    let deletedEducation = await education.deleteOne();
+    deletedEducation.hashed_password = undefined;
+    deletedEducation.salt = undefined;
+    res.json(deletedEducation);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
 
- const deleteEducation = async (req, res) => {
-  try {
-    await Education.findByIdAndDelete(req.params.id);
-    res.json({ message: "Education deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
-  }
-};
 export default { createEducation, getEducations, getEducationById, deleteEducation, updateEducation };

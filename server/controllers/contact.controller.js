@@ -1,52 +1,72 @@
 import Contact from "../models/contact.model.js";
+import extend from "lodash/extend.js";
 import errorHandler from "./error.controller.js";
 
 const createContact = async (req, res) => {
+  const contact = new Contact(req.body);
   try {
-    const contact = new Contact(req.body);
     await contact.save();
-    res.status(201).json(contact);
+    return res.status(200).json({
+      message: "Successful!",
+    });
   } catch (err) {
-    res.status(400).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
-
 const getContacts = async (req, res) => {
   try {
-    const contacts = await Contact.find();
+    let contacts = await Contact.find().select("firstname lastname email");
     res.json(contacts);
   } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
-
-const getContactById = async (req, res) => {
+const getContactById = async (req, res, next, id) => {
   try {
-    const contact = await Contact.findById(req.params.id);
-    if (!contact) return res.status(404).json({ error: "Contact not found" });
-    res.json(contact);
+    let contact = await Contact.findById(id);
+    if (!contact)
+      return res.status(400).json({
+        error: "Contact not found",
+      });
+    req.profile = contact;
+    next();
   } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: "Could not retrieve contact",
+    });
   }
 };
-
 const updateContact = async (req, res) => {
   try {
-    const contact = await Contact.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    let contact = req.profile;
+    contact = extend(contact, req.body);
+    contact.updated = Date.now();
+    await contact.save();
+    contact.hashed_password = undefined;
+    contact.salt = undefined;
     res.json(contact);
   } catch (err) {
-    res.status(400).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
+  }
+};
+const deleteContact = async (req, res) => {
+  try {
+    let contact = req.profile;
+    let deletedContact = await contact.deleteOne();
+    deletedContact.hashed_password = undefined;
+    deletedContact.salt = undefined;
+    res.json(deletedContact);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
 
-const deleteContact = async (req, res) => {
-  try {
-    await Contact.findByIdAndDelete(req.params.id);
-    res.json({ message: "Contact deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
-  }
-};
 export default { createContact, getContactById, getContacts, deleteContact, updateContact };

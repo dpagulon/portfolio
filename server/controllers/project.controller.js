@@ -1,50 +1,72 @@
 import Project from "../models/project.model.js";
+import extend from "lodash/extend.js";
 import errorHandler from "./error.controller.js";
 
- const createProject = async (req, res) => {
+const createProject = async (req, res) => {
+  const project = new Project(req.body);
   try {
-    const project = new Project(req.body);
     await project.save();
-    res.status(201).json(project);
+    return res.status(200).json({
+      message: "Successful!",
+    });
   } catch (err) {
-    res.status(400).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
-
- const getProjects = async (req, res) => {
+const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find();
+    let projects = await Project.find().select("title firstname lastname email completion description");
     res.json(projects);
   } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
-
- const getProjectById = async (req, res) => {
+const getProjectById = async (req, res, next, id) => {
   try {
-    const project = await Project.findById(req.params.id);
-    if (!project) return res.status(404).json({ error: "Project not found" });
+    let project = await Project.findById(id);
+    if (!project)
+      return res.status(400).json({
+        error: "Project not found",
+      });
+    req.profile = project;
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: "Could not retrieve project",
+    });
+  }
+};
+const updateProject = async (req, res) => {
+  try {
+    let project = req.profile;
+    project = extend(project, req.body);
+    project.updated = Date.now();
+    await project.save();
+    project.hashed_password = undefined;
+    project.salt = undefined;
     res.json(project);
   } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
+  }
+};
+const deleteProject = async (req, res) => {
+  try {
+    let project = req.profile;
+    let deletedProject = await project.deleteOne();
+    deletedProject.hashed_password = undefined;
+    deletedProject.salt = undefined;
+    res.json(deletedProject);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
   }
 };
 
- const updateProject = async (req, res) => {
-  try {
-    const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(project);
-  } catch (err) {
-    res.status(400).json({ error: errorHandler.getErrorMessage(err), });
-  }
-};
-
- const deleteProject = async (req, res) => {
-  try {
-    await Project.findByIdAndDelete(req.params.id);
-    res.json({ message: "Project deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: errorHandler.getErrorMessage(err), });
-  }
-};
 export default { createProject, getProjectById, getProjects, deleteProject, updateProject };
