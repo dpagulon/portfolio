@@ -20,7 +20,7 @@ app.use(cors());
 app.use("/api/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
-app.use("/api/educations", educationRoutes);
+app.use("/api/qualifications", educationRoutes);
 app.use("/api/projects", projectRoutes);
 
 app.get("/", (req, res) => {
