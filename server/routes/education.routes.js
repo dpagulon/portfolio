@@ -1,18 +1,14 @@
 import express from "express";
-import {
-  createEducation,
-  getEducations,
-  getEducationById,
-  updateEducation,
-  deleteEducation,
-} from "../controllers/education.controller.js";
+import educationController from "../controllers/education.controller.js";
 
 const router = express.Router();
 
-router.post("/", createEducation);
-router.get("/", getEducations);
-router.get("/:id", getEducationById);
-router.put("/:id", updateEducation);
-router.delete("/:id", deleteEducation);
+router.post("/", educationController.createEducation);
+router.get("/", educationController.getEducations);
+router.get("/:educationId", educationController.readEducation);
+router.put("/:educationId", educationController.updateEducation);
+router.delete("/:educationId", educationController.deleteEducation);
+
+router.param("educationId", educationController.getEducationById);
 
 export default router;
