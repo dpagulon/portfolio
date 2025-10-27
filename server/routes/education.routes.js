@@ -1,14 +1,15 @@
 import express from "express";
-import educationController from "../controllers/education.controller.js";
+import educationCtrl from "../controllers/education.controller.js";
+import authCtrl from "../controllers/auth.controller.js";
 
 const router = express.Router();
-
-router.post("/", educationController.createEducation);
-router.get("/", educationController.getEducations);
-router.get("/:educationId", educationController.readEducation);
-router.put("/:educationId", educationController.updateEducation);
-router.delete("/:educationId", educationController.deleteEducation);
-
-router.param("educationId", educationController.getEducationById);
+router.route("/")
+  .post(authCtrl.requireSignin, educationCtrl.createEducation)
+  .get(educationCtrl.getEducations);
+router.route("/:educationId")
+  .get(educationCtrl.getEducationById)
+  .put(authCtrl.requireSignin, educationCtrl.updateEducation)
+  .delete(authCtrl.requireSignin, educationCtrl.deleteEducation);
+router.param("educationId", educationCtrl.getEducationById);
 
 export default router;
