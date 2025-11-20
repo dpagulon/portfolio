@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+/*import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { expressjwt } from "express-jwt";
 import config from "../../config/config.js";
@@ -32,6 +32,77 @@ export const requireSignin = expressjwt({
 export const hasAuthorization = (req, res, next) => {
   const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
   if (!authorized) return res.status(403).json({ error: "User is not authorized" });
+  next();
+};
+
+export default { signin, signout, requireSignin, hasAuthorization };
+*/
+
+import User from "../models/user.model.js";
+import jwt from "jsonwebtoken";
+import { expressjwt } from "express-jwt";
+import config from "../../config/config.js";
+
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+
+    if (!user)
+      return res.status(401).json({ error: "User not found" });
+
+    if (!user.authenticate(password))
+      return res.status(401).json({ error: "Email and password don't match." });
+
+    // Create JWT token
+    const token = jwt.sign(
+      { _id: user._id },
+      config.jwtSecret,
+      { expiresIn: "1d" }
+    );
+
+    // Send token as cookie
+    res.cookie("t", token, {
+      httpOnly: true,
+      maxAge: 86400000, // 1 day
+    });
+
+    return res.json({
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+
+  } catch (err) {
+    return res.status(401).json({
+      error: "Could not sign in",
+    });
+  }
+};
+
+export const signout = (req, res) => {
+  res.clearCookie("t");
+  return res.json({ message: "Signed out successfully." });
+};
+
+// Middleware to verify JWT
+export const requireSignin = expressjwt({
+  secret: config.jwtSecret,
+  algorithms: ["HS256"],
+  requestProperty: "auth",
+});
+
+export const hasAuthorization = (req, res, next) => {
+  const authorized =
+    req.profile && req.auth && req.profile._id.toString() === req.auth._id;
+
+  if (!authorized)
+    return res.status(403).json({ error: "User is not authorized" });
+
   next();
 };
 
