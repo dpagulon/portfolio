@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Contact() {
-    
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    contactNumber: '',
+    email: '',
+    message: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Contact Form Data:', formData);
+    alert('Message sent successfully!');
+    setFormData({
+      firstName: '',
+      lastName: '',
+      contactNumber: '',
+      email: '',
+      message: '',
+    });
+  };
+
   return (
     <div style={styles.container}>
       <h1>Contact Me</h1>
 
-      {/* Contact Panel */}
       <div style={styles.contactPanel}>
         <p><strong>Name:</strong> Daniel Simon Pagulong</p>
         <p><strong>Email:</strong> dpagulon27@gmail.com</p>
@@ -15,25 +39,59 @@ export default function Contact() {
         <p><strong>GitHub:</strong> <a href="https://github.com/dpagulon" target="_blank" rel="noopener noreferrer">github.com/dpagulon</a></p>
       </div>
 
-      {/* Message Form */}
-      <form style={styles.form}>
+      <form style={styles.form} onSubmit={handleSubmit}>
         <h2>Send Me a Message</h2>
 
         <div style={styles.formGroup}>
-          <input type="text" name="firstName" placeholder="First Name" />
-          <input type="text" name="lastName" placeholder="Last Name" />
+          <input
+            type="text"
+            name="firstName"
+            placeholder="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div style={styles.formGroup}>
-          <input type="text" name="contactNumber" placeholder="Contact Number" />
-          <input type="email" name="email" placeholder="Email Address" />
+          <input
+            type="text"
+            name="contactNumber"
+            placeholder="Contact Number"
+            value={formData.contactNumber}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div style={styles.formGroup}>
-          <textarea name="message" placeholder="Your Message" rows="5" />
+          <textarea
+            name="message"
+            placeholder="Your Message"
+            rows="5"
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
         </div>
         
-        <button type="button" style={styles.submitButton}>Send Message</button>
+        <button type="submit" style={styles.submitButton}>Send Message</button>
       </form>
     </div>
   );
