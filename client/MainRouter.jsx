@@ -6,10 +6,10 @@ import About from './src/about'
 import Contact from './src/contact'
 import Services from './src/services'
 import Counter from './src/counter'
-import SignUpForm from './components/SignUpForm'
-import SignInForm from './components/SignInForm'
-import EducationForm from './components/EducationForm'
-import ProjectForm from './components/ProjectForm'
+import SignUpForm from './src/SignUpForm'
+import SignInForm from './src/SignInForm'
+import EducationForm from './src/EducationForm'
+import ProjectForm from './src/ProjectForm'
 
 const MainRouter = () => {
     return (
