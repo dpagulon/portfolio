@@ -1,11 +1,15 @@
+import React, { useState } from "react";
+import EducationForm from "./EducationForm";
+
 export default function Education() {
-  const educationData = [
+  const isAdmin = localStorage.getItem("role") === "admin";
+
+  const [educationData, setEducationData] = useState([
     {
       institution: 'Centennial College',
       degree: 'Software Engineering Technology Diploma',
       year: 'Sept. 2024 - Current',
     },
-    
     {
       institution: 'Centennial College',
       degree: 'Motive Power Technician Diploma',
@@ -16,11 +20,18 @@ export default function Education() {
       degree: 'Ontario Secondary School Diploma',
       year: 'Sept. 2016 - Jun. 2020',
     }
-  ];
+  ]);
+
+  const handleAddEducation = (newEdu) => {
+    setEducationData([...educationData, newEdu]);
+  };
 
   return (
     <div style={styles.container}>
       <h1>Education & Qualifications</h1>
+
+      {isAdmin && <EducationForm onAddEducation={handleAddEducation} />}
+
       <div style={styles.educationList}>
         {educationData.map((edu, index) => (
           <div key={index} style={styles.educationCard}>

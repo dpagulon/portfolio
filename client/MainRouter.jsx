@@ -1,15 +1,15 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Layout from './components/Layout'
-import Home from './components/Home'
-import About from './src/about'
-import Contact from './src/contact'
-import Services from './src/services'
-import Counter from './src/counter'
-import SignUpForm from './src/SignUpForm'
-import SignInForm from './src/SignInForm'
-import EducationForm from './src/EducationForm'
-import ProjectForm from './src/ProjectForm'
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Layout from './components/Layout';
+import Home from './components/Home';
+import About from './src/about';
+import Contact from './src/contact';
+import Services from './src/services';
+import Counter from './src/counter';
+import SignUpForm from './src/SignUpForm';
+import SignInForm from './src/SignInForm';
+import Education from './src/education'; 
+import Project from './src/project';
 
 const MainRouter = () => {
     return (
@@ -23,10 +23,11 @@ const MainRouter = () => {
                 <Route exact path="/counter" element={<Counter />} />
                 <Route exact path="/signup" element={<SignUpForm />} />
                 <Route exact path="/signin" element={<SignInForm />} />
-                <Route exact path="/education" element={<EducationForm />} />
-                <Route exact path="/project" element={<ProjectForm />} />
+                <Route exact path="/education" element={<Education />} />
+                <Route exact path="/project" element={<Project />} />
             </Routes>
         </div>
-    )
-}
-export default MainRouter
+    );
+};
+
+export default MainRouter;
