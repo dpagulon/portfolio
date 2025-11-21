@@ -4,24 +4,51 @@ const ProjectForm = () => {
   const [project, setProject] = useState({
     title: "",
     description: "",
-    link: "",
+    imageUrl: "",
   });
+
+  const [status, setStatus] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProject({ ...project, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Project Data:", project);
-    alert("Project Added!");
-    setProject({ title: "", description: "", link: "" });
+    try {
+      const token = localStorage.getItem("token"); // required for protected route
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(project),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus({ success: true, message: "Project added successfully!" });
+        setProject({ title: "", description: "", imageUrl: "" });
+      } else {
+        setStatus({ success: false, message: data.error || "Failed to add project." });
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus({ success: false, message: "Failed to add project." });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Project</h2>
+      <h2>Add Project</h2>
+      {status && (
+        <p style={{ color: status.success ? "green" : "red" }}>
+          {status.message}
+        </p>
+      )}
       <input
         type="text"
         name="title"
@@ -40,10 +67,10 @@ const ProjectForm = () => {
       />
       <br />
       <input
-        type="url"
-        name="link"
-        placeholder="Project Link"
-        value={project.link}
+        type="text"
+        name="imageUrl"
+        placeholder="Project Image URL"
+        value={project.imageUrl}
         onChange={handleChange}
       />
       <br />

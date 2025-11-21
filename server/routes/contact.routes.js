@@ -4,12 +4,12 @@ import authCtrl from "../controllers/auth.controller.js";
 
 const router = express.Router();
 router.route("/")
-  .post(authCtrl.requireSignin, contactCtrl.createContact)
-  .get(contactCtrl.getContacts);
+  .get(authCtrl.requireSignin, contactCtrl.getContacts) 
+  .post(authCtrl.requireSignin, authCtrl.isAdmin, contactCtrl.createContact); 
 router.route("/:contactId")
-  .get(contactCtrl.getContactById)
-  .put(authCtrl.requireSignin, contactCtrl.updateContact)
-  .delete(authCtrl.requireSignin, contactCtrl.deleteContact);
+  .get(authCtrl.requireSignin, contactCtrl.getContactById)
+  .put(authCtrl.requireSignin, authCtrl.isAdmin, contactCtrl.updateContact)
+  .delete(authCtrl.requireSignin, authCtrl.isAdmin, contactCtrl.deleteContact); 
 router.param("contactId", contactCtrl.getContactById);
 
 export default router;

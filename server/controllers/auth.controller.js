@@ -1,43 +1,3 @@
-/*import User from "../models/user.model.js";
-import jwt from "jsonwebtoken";
-import { expressjwt } from "express-jwt";
-import config from "../../config/config.js";
-
-export const signin = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ error: "User not found" });
-    if (!user.authenticate(password)) return res.status(401).json({ error: "Email and password don't match." });
-
-    const token = jwt.sign({ _id: user._id }, config.jwtSecret, { expiresIn: "1d" });
-    res.cookie("t", token, { expire: new Date() + 9999 });
-    res.json({ token, user: { _id: user._id, name: user.name, email: user.email } });
-  } catch (err) {
-    res.status(401).json({ error: "Could not sign in" });
-  }
-};
-
-export const signout = (req, res) => {
-  res.clearCookie("t");
-  res.json({ message: "Signed out successfully." });
-};
-
-export const requireSignin = expressjwt({
-  secret: config.jwtSecret,
-  algorithms: ["HS256"],
-  requestProperty: "auth",
-});
-
-export const hasAuthorization = (req, res, next) => {
-  const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
-  if (!authorized) return res.status(403).json({ error: "User is not authorized" });
-  next();
-};
-
-export default { signin, signout, requireSignin, hasAuthorization };
-*/
-
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { expressjwt } from "express-jwt";
@@ -47,25 +7,22 @@ export const signin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    let user = await User.findOne({ email });
-
+    const user = await User.findOne({ email });
     if (!user)
       return res.status(401).json({ error: "User not found" });
 
     if (!user.authenticate(password))
       return res.status(401).json({ error: "Email and password don't match." });
 
-    // Create JWT token
     const token = jwt.sign(
-      { _id: user._id },
+      { _id: user._id, role: user.role },
       config.jwtSecret,
       { expiresIn: "1d" }
     );
 
-    // Send token as cookie
     res.cookie("t", token, {
       httpOnly: true,
-      maxAge: 86400000, // 1 day
+      maxAge: 86400000
     });
 
     return res.json({
@@ -74,13 +31,12 @@ export const signin = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role
       },
     });
 
   } catch (err) {
-    return res.status(401).json({
-      error: "Could not sign in",
-    });
+    return res.status(401).json({ error: "Could not sign in" });
   }
 };
 
@@ -89,11 +45,10 @@ export const signout = (req, res) => {
   return res.json({ message: "Signed out successfully." });
 };
 
-// Middleware to verify JWT
 export const requireSignin = expressjwt({
   secret: config.jwtSecret,
   algorithms: ["HS256"],
-  requestProperty: "auth",
+  requestProperty: "auth"
 });
 
 export const hasAuthorization = (req, res, next) => {
@@ -106,4 +61,12 @@ export const hasAuthorization = (req, res, next) => {
   next();
 };
 
-export default { signin, signout, requireSignin, hasAuthorization };
+export const isAdmin = (req, res, next) => {
+  if (req.auth && req.auth.role === "admin") {
+    next();
+  } else {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+};
+
+export default { signin, signout, requireSignin, hasAuthorization, isAdmin };

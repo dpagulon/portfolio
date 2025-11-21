@@ -19,7 +19,8 @@ export default function Layout() {
           <Link to="/project">Project</Link> |{' '}
           <Link to="/services">Services</Link> |{' '}
           <Link to="/contact">Contact</Link> |{' '}
-          <Link to="/counter">Counter</Link>
+          <Link to="/signin">Sign In</Link> |{' '}
+          <Link to="/signup">Sign Up</Link>
         </nav>
         <hr />
       </div>

@@ -1,53 +1,60 @@
 import Project from "../models/project.model.js";
 import extend from "lodash/extend.js";
 
-const createProject = async (req, res) => {
-  const project = new Project(req.body);
+export const createProject = async (req, res) => {
   try {
+    const project = new Project(req.body);
     await project.save();
-    res.json({ message: "Project created successfully" });
+    res.status(201).json({
+      message: "Project created successfully",
+      project,
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-const getProjects = async (req, res) => {
+export const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find().select("title firstname lastname email completion description");
+    const projects = await Project.find();
     res.json(projects);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-const getProjectById = async (req, res, next, id) => {
+export const projectById = async (req, res, next, id) => {
   try {
     const project = await Project.findById(id);
-    if (!project) return res.status(404).json({ error: "Project not found" });
-    req.profile = project;
+    if (!project)
+      return res.status(404).json({ error: "Project not found" });
+
+    req.project = project;
     next();
   } catch (err) {
     res.status(400).json({ error: "Could not retrieve project" });
   }
 };
 
-const updateProject = async (req, res) => {
+export const updateProject = async (req, res) => {
   try {
-    let project = extend(req.profile, req.body);
+    let project = extend(req.project, req.body);
     await project.save();
-    res.json(project);
+    res.json({
+      message: "Project updated successfully",
+      project,
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-const deleteProject = async (req, res) => {
+export const deleteProject = async (req, res) => {
   try {
-    const deletedProject = await req.profile.deleteOne();
-    res.json({ message: "Project deleted successfully", deletedProject });
+    await req.project.deleteOne();
+    res.json({ message: "Project deleted successfully" });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
-
-export default {createProject, getProjects, getProjectById, updateProject, deleteProject};
+export default {createProject, getProjects, projectById, updateProject, deleteProject};

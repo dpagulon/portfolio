@@ -2,18 +2,24 @@ import Contact from "../models/contact.model.js";
 import extend from "lodash/extend.js";
 
 export const createContact = async (req, res) => {
-  const contact = new Contact(req.body);
   try {
+    const contact = new Contact(req.body);
     await contact.save();
-    res.json({ message: "Contact created successfully" });
+
+    res.status(201).json({
+      message: "Contact created successfully",
+      contact,
+    });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    return res.status(400).json({
+      error: err.message,
+    });
   }
 };
 
 export const getContacts = async (req, res) => {
   try {
-    const contacts = await Contact.find().select("firstname lastname email");
+    const contacts = await Contact.find();
     res.json(contacts);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -23,7 +29,9 @@ export const getContacts = async (req, res) => {
 export const getContactById = async (req, res, next, id) => {
   try {
     const contact = await Contact.findById(id);
-    if (!contact) return res.status(404).json({ error: "Contact not found" });
+    if (!contact)
+      return res.status(404).json({ error: "Contact not found" });
+
     req.profile = contact;
     next();
   } catch (err) {
@@ -35,7 +43,10 @@ export const updateContact = async (req, res) => {
   try {
     let contact = extend(req.profile, req.body);
     await contact.save();
-    res.json(contact);
+    res.json({
+      message: "Contact updated successfully",
+      contact,
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -44,10 +55,12 @@ export const updateContact = async (req, res) => {
 export const deleteContact = async (req, res) => {
   try {
     const deletedContact = await req.profile.deleteOne();
-    res.json({ message: "Contact deleted successfully", deletedContact });
+    res.json({
+      message: "Contact deleted successfully",
+      deletedContact,
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
-
-export default { createContact, getContacts, getContactById, updateContact, deleteContact };
+export default {createContact, getContacts, getContactById, updateContact, deleteContact};

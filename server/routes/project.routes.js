@@ -4,12 +4,12 @@ import authCtrl from "../controllers/auth.controller.js";
 
 const router = express.Router();
 router.route("/")
-  .post(authCtrl.requireSignin, projectCtrl.createProject)
-  .get(projectCtrl.getProjects);
+  .get(authCtrl.requireSignin, projectCtrl.getProjects)
+  .post(authCtrl.requireSignin, authCtrl.isAdmin, projectCtrl.createProject);
 router.route("/:projectId")
-  .get(projectCtrl.getProjectById)
-  .put(authCtrl.requireSignin, projectCtrl.updateProject)
-  .delete(authCtrl.requireSignin, projectCtrl.deleteProject);
-router.param("projectId", projectCtrl.getProjectById);
+  .get(authCtrl.requireSignin, projectCtrl.projectById)
+  .put(authCtrl.requireSignin, authCtrl.isAdmin, projectCtrl.updateProject)
+  .delete(authCtrl.requireSignin, authCtrl.isAdmin, projectCtrl.deleteProject);
+router.param("projectId", projectCtrl.projectById);
 
 export default router;
