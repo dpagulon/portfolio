@@ -1,0 +1,40 @@
+describe("Portfolio Test", () => {
+  it("tests Portfolio Test", () => {
+    cy.viewport(512, 914);
+    cy.visit("http://localhost:5173/");
+    cy.get("#root > div > div:nth-of-type(1) a:nth-of-type(1)").click();
+    cy.get("a:nth-of-type(1) > button").click();
+    cy.get("a:nth-of-type(2)").click();
+    cy.get("a:nth-of-type(3)").click();
+    cy.get("a:nth-of-type(4)").click();
+    cy.get("a:nth-of-type(5)").click();
+    cy.get("a:nth-of-type(6)").click();
+    cy.get("a:nth-of-type(7)").click();
+    cy.get("a:nth-of-type(8)").click();
+    cy.get("a:nth-of-type(9)").click();
+    cy.get("a:nth-of-type(1)").click();
+    cy.get("a:nth-of-type(4) > button").click();
+    cy.get("#root > div > div:nth-of-type(1) a:nth-of-type(1)").click();
+    cy.get("a:nth-of-type(3) > button").click();
+    cy.get("a:nth-of-type(1)").click();
+    cy.get("a:nth-of-type(2) > button").click();
+    cy.get("a:nth-of-type(1)").click();
+    cy.get("a:nth-of-type(8)").click();
+    cy.get("input[type='text']").click();
+    cy.get("input[type='text']").type("C");
+    cy.get("input[type='text']").type("Carl");
+    cy.get("input[type='email']").type("carl@email.com");
+    cy.get("input[type='password']").type("carlcarl");
+    cy.get("button").click();
+    cy.get("a:nth-of-type(7)").click();
+    cy.get("input[type='email']").click();
+    cy.get("input[type='email']").type("carl@email.com");
+    cy.get("input[type='password']").type("carlcarl");
+    cy.get("button").click();
+    cy.get("#root > div").click();
+    cy.get("a:nth-of-type(1)").click();
+    cy.get("a:nth-of-type(9)").click();
+    cy.get("a:nth-of-type(1)").click();
+  });
+});
+//# recorderSourceMap=BCBDBEBFBGBHBIBJBKBLBMBNBOBPBQBRBSBTBUBVBWBXBYAYBZAZAZBaAaAaBbBcBdBeBfAfAfBgBBhBBiBBjBBkBB
