@@ -20,7 +20,8 @@ export default function Layout() {
           <Link to="/services">Services</Link> |{' '}
           <Link to="/contact">Contact</Link> |{' '}
           <Link to="/signin">Sign In</Link> |{' '}
-          <Link to="/signup">Sign Up</Link>
+          <Link to="/signup">Sign Up</Link> |{' '}
+          <Link to="/counter">Counter</Link>
         </nav>
         <hr />
       </div>
