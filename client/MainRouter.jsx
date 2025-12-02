@@ -5,7 +5,6 @@ import Home from './components/Home';
 import About from './src/about';
 import Contact from './src/contact';
 import Services from './src/services';
-import Counter from './src/counter';
 import SignUpForm from './src/SignUpForm';
 import SignInForm from './src/SignInForm';
 import Education from './src/education'; 
@@ -20,7 +19,6 @@ const MainRouter = () => {
                 <Route exact path="/about" element={<About />} />
                 <Route exact path="/services" element={<Services />} />
                 <Route exact path="/contact" element={<Contact />} />
-                <Route exact path="/counter" element={<Counter />} />
                 <Route exact path="/signup" element={<SignUpForm />} />
                 <Route exact path="/signin" element={<SignInForm />} />
                 <Route exact path="/education" element={<Education />} />

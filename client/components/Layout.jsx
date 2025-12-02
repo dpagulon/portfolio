@@ -8,7 +8,7 @@ export default function Layout() {
       <img 
         src={logo} 
         alt="Logo" 
-        style={{ width: '100px', height: '100px', marginRight: '20px', borderRadius: '50%' }} 
+        style={{ width: '100px', height: 'auto', marginRight: '20px', borderRadius: '10px' }} 
       />
       <div>
         <h1>My Portfolio</h1>
@@ -20,8 +20,7 @@ export default function Layout() {
           <Link to="/services">Services</Link> |{' '}
           <Link to="/contact">Contact</Link> |{' '}
           <Link to="/signin">Sign In</Link> |{' '}
-          <Link to="/signup">Sign Up</Link> |{' '}
-          <Link to="/counter">Counter</Link>
+          <Link to="/signup">Sign Up</Link>
         </nav>
         <hr />
       </div>
