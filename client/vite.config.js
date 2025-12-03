@@ -16,10 +16,8 @@ server:{
     },
 },
   build: {
-  manifest: true,
-  rollupOptions: {
-  input: "./src/main.jsx",
-  },
+  emptyOutDir: true,
+  outDir: "../dist/app",
   },
   test: {
     globals: true,
