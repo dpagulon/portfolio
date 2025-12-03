@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(compress());
 app.use(helmet());
 app.use(cors());
-app.use("/", userRoutes);
+//app.use("/", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/qualifications", educationRoutes);
