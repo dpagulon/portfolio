@@ -21,4 +21,10 @@ server:{
   input: "./src/main.jsx",
   },
   },
+  test: {
+    globals: true,
+    environment: "jsdom", 
+    setupFiles: "./src/setupTests.js",
+    include: ["src/**/*.test.{js,jsx}"],
+  },
 });
